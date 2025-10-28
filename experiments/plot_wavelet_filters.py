@@ -7,23 +7,19 @@ from wavelets.numpy.Meyer import MeyerWavelet
 def parse_args():
     parser = argparse.ArgumentParser(description="Plot Wavelet Filters")
     parser.add_argument("--backend", choices=["numpy", "torch"], default="numpy")
-    # parser.add_argument("--rank", type=int, default=10)
-    # parser.add_argument("--max_iter", type=int, default=100)
-    # parser.add_argument("--matrix_size", type=int, nargs=2, default=[1000, 1000])
-    # parser.add_argument("--missing_fraction", type=float, default=0.5)
+    parser.add_argument("--wavelet", choices=["meyer", "battle-lemarie"], default="meyer")
+    parser.add_argument("--n_scales", type=int, default=3)
+    parser.add_argument("--n_samples", type=int, default=256)
     return parser.parse_args()
 
 
 def main():
+
     args = parse_args()
 
-    n_rows = 4
-
-    fig, ax = plt.subplots(n_rows, 2, figsize=(12, 8))
-
-    n_samples = 256
-    # n_scales = np.floor(np.log2(n_samples)) - 2
-    n_scales = 3
+    n_samples   = args.n_samples
+    n_scales    = args.n_scales
+    n_rows      = n_scales + 1
 
     print(f'Number of Scales: {n_scales}')
 
@@ -33,6 +29,8 @@ def main():
     )
 
     colors = plt.cm.seismic(np.linspace(0, 1, n_rows))
+
+    fig, ax = plt.subplots(n_rows, 2, figsize=(12, 9))
 
     for i, c in enumerate(colors):
 
@@ -46,6 +44,9 @@ def main():
 
         ax[i, 0].set_xlabel('Freq [Hz]')
         ax[i, 1].set_xlabel('Time [Hz]')
+
+    ax[0, 0].set_title('Wavelet Filter in Frequency Domain')
+    ax[0, 1].set_title('Wavelet Filter in Time Domain')
 
     plt.tight_layout()
     plt.show()
