@@ -30,6 +30,8 @@ class WaveletFrame(ABC):
     
     def construct_filters(self):
 
+        self.filter_names = []
+
         self.n_scales = int(self.n_scales)
 
         self.W = np.zeros(
@@ -39,10 +41,13 @@ class WaveletFrame(ABC):
         # Scaling function (Low-frequency)
         self.W[0, :] = self.phi(self.w)
 
+        self.filter_names.append((r'$\hat{\phi}(w)$', r'$\phi(t)$'))
+
         for j in range(self.n_scales):
 
             # Wavelet function at jth scale
             self.W[j + 1, :] = self.psi(2**(-j) * self.w)
+            self.filter_names.append((fr"$\hat{{\psi}}_{j}(w)$", fr"$\psi_{j}(t)$"))
 
     @abstractmethod
     def psi(self, w):
